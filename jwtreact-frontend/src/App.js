@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Login from "../src/Login";
+import Axios from "axios";
+
+const config = {
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+  },
+};
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const getUser = async () => {
+    let res = await Axios.get("http://localhost:8080/user", config);
+    setUser(res.data);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Login />
+      <h1>/user : {user}</h1>
+      <button onClick={getUser}>유저정보 가져오기</button>
     </div>
   );
 }
